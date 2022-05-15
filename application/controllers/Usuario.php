@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . '/libraries/REST_Controller.php';
 
-class Pacientes extends REST_Controller
+class Usuario extends REST_Controller
 {
     public function __construct($config = 'rest')
     {
@@ -17,36 +17,27 @@ class Pacientes extends REST_Controller
             die();
         }
 
-        $this->load->model('pacientes_model');
+        $this->load->model('usuario_model');
     }
 
     public function index_get()
     {
-        $datos = $this->pacientes_model->get();
+        $datos = $this->usuario_model->get();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
-            $this->response(array('error' => 'No hay productores en la base de datos...'), 200);
+            $this->response(array('error' => 'No hay datos...'), 200);
         }
     }
 
-    public function contador_get()
+    public function login_get($USERNICK, $PASSWORD)
     {
-        $datos = $this->pacientes_model->contador();
-        if (!is_null($datos)) {
-            $this->response(array('response' => $datos), 200);
-        } else {
-            $this->response(array('error' => 'productor no encontrado...'), 200);
-        }
-    }
+        $datos = $this->usuario_model->login($USERNICK, hash("sha256", $PASSWORD));
 
-    public function one_get($IDPACIENTE)
-    {
-        $datos = $this->pacientes_model->getone($IDPACIENTE);
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
-            $this->response(array('error' => 'No hay productores en la base de datos...'), 200);
+            $this->response(array('error' => 'No hay datos...'), 200);
         }
     }
 
@@ -54,13 +45,12 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDGENERO = $params->IDGENERO;
         $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $USERNICK = $params->USERNICK;
+        $PASSWORD = $params->PASSWORD;
+        $TIPOUSER = $params->TIPOUSER;
 
-        $id = $this->pacientes_model->save($IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $id = $this->usuario_model->save($IDPERSONA, $USERNICK, hash("sha256", $PASSWORD), $TIPOUSER);
 
         if (!is_null($id)) {
             $this->response(array('response' => $id), 200);
@@ -69,12 +59,12 @@ class Pacientes extends REST_Controller
         }
     }
 
-    public function delete_get($IDPACIENTE)
+    public function delete_get($IDUSUARIO)
     {
-        if (!$IDPACIENTE) {
+        if (!$IDUSUARIO) {
             $this->response(null, 400);
         }
-        $delete = $this->pacientes_model->delete($IDPACIENTE);
+        $delete = $this->usuario_model->delete($IDUSUARIO);
         if (!is_null($delete)) {
             $this->response(array('response' => 'done'), 200);
         } else {
@@ -86,14 +76,13 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDPACIENTE = $params->IDPACIENTE;
-        $IDGENERO = $params->IDGENERO;
+        $IDUSUARIO = $params->IDUSUARIO;
         $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $USERNICK = $params->USERNICK;
+        $PASSWORD = $params->PASSWORD;
+        $TIPOUSER = $params->TIPOUSER;
 
-        $update = $this->pacientes_model->update($IDPACIENTE, $IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $update = $this->usuario_model->update($IDUSUARIO, $IDPERSONA, $USERNICK, hash("sha256", $PASSWORD), $TIPOUSER);
 
         if (!is_null($update)) {
             $this->response(array('response' => 'data actualizado!'), 200);

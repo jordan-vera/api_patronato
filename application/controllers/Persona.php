@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . '/libraries/REST_Controller.php';
 
-class Pacientes extends REST_Controller
+class Persona extends REST_Controller
 {
     public function __construct($config = 'rest')
     {
@@ -17,36 +17,26 @@ class Pacientes extends REST_Controller
             die();
         }
 
-        $this->load->model('pacientes_model');
+        $this->load->model('persona_model');
     }
 
     public function index_get()
     {
-        $datos = $this->pacientes_model->get();
+        $datos = $this->persona_model->get();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
-            $this->response(array('error' => 'No hay productores en la base de datos...'), 200);
+            $this->response(array('error' => 'No hay datos...'), 200);
         }
     }
 
-    public function contador_get()
+    public function one_get($IDPERSONA)
     {
-        $datos = $this->pacientes_model->contador();
+        $datos = $this->persona_model->getone($IDPERSONA);
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
-            $this->response(array('error' => 'productor no encontrado...'), 200);
-        }
-    }
-
-    public function one_get($IDPACIENTE)
-    {
-        $datos = $this->pacientes_model->getone($IDPACIENTE);
-        if (!is_null($datos)) {
-            $this->response(array('response' => $datos), 200);
-        } else {
-            $this->response(array('error' => 'No hay productores en la base de datos...'), 200);
+            $this->response(array('error' => 'No hay datos...'), 200);
         }
     }
 
@@ -54,13 +44,14 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDGENERO = $params->IDGENERO;
-        $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $IDCANTON = $params->IDCANTON;
+        $NOMBRES = $params->NOMBRES;
+        $IDENTIFICACION = $params->IDENTIFICACION;
+        $CELULAR = $params->CELULAR;
+        $EMAIL = $params->EMAIL;
+        $DIRECCION = $params->DIRECCION;
 
-        $id = $this->pacientes_model->save($IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $id = $this->persona_model->save($IDCANTON, $NOMBRES, $IDENTIFICACION, $CELULAR, $EMAIL, $DIRECCION);
 
         if (!is_null($id)) {
             $this->response(array('response' => $id), 200);
@@ -69,12 +60,12 @@ class Pacientes extends REST_Controller
         }
     }
 
-    public function delete_get($IDPACIENTE)
+    public function delete_get($IDPERSONA)
     {
-        if (!$IDPACIENTE) {
+        if (!$IDPERSONA) {
             $this->response(null, 400);
         }
-        $delete = $this->pacientes_model->delete($IDPACIENTE);
+        $delete = $this->persona_model->delete($IDPERSONA);
         if (!is_null($delete)) {
             $this->response(array('response' => 'done'), 200);
         } else {
@@ -86,14 +77,15 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDPACIENTE = $params->IDPACIENTE;
-        $IDGENERO = $params->IDGENERO;
         $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $IDCANTON = $params->IDCANTON;
+        $NOMBRES = $params->NOMBRES;
+        $IDENTIFICACION = $params->IDENTIFICACION;
+        $CELULAR = $params->CELULAR;
+        $EMAIL = $params->EMAIL;
+        $DIRECCION = $params->DIRECCION;
 
-        $update = $this->pacientes_model->update($IDPACIENTE, $IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $update = $this->persona_model->update($IDPERSONA, $IDCANTON, $NOMBRES, $IDENTIFICACION, $CELULAR, $EMAIL, $DIRECCION);
 
         if (!is_null($update)) {
             $this->response(array('response' => 'data actualizado!'), 200);

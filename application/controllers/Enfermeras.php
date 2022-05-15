@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . '/libraries/REST_Controller.php';
 
-class Pacientes extends REST_Controller
+class Enfermeras extends REST_Controller
 {
     public function __construct($config = 'rest')
     {
@@ -17,12 +17,12 @@ class Pacientes extends REST_Controller
             die();
         }
 
-        $this->load->model('pacientes_model');
+        $this->load->model('enfermeras_model');
     }
 
     public function index_get()
     {
-        $datos = $this->pacientes_model->get();
+        $datos = $this->enfermeras_model->get();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -32,7 +32,7 @@ class Pacientes extends REST_Controller
 
     public function contador_get()
     {
-        $datos = $this->pacientes_model->contador();
+        $datos = $this->enfermeras_model->contador();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -40,9 +40,9 @@ class Pacientes extends REST_Controller
         }
     }
 
-    public function one_get($IDPACIENTE)
+    public function one_get($IDENFERMERA)
     {
-        $datos = $this->pacientes_model->getone($IDPACIENTE);
+        $datos = $this->enfermeras_model->getone($IDENFERMERA);
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -54,13 +54,12 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDGENERO = $params->IDGENERO;
         $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $CARGO = $params->CARGO;
+        $OBSERVACION = $params->OBSERVACION;
+        $ATENCIONES = $params->ATENCIONES;
 
-        $id = $this->pacientes_model->save($IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $id = $this->enfermeras_model->save($IDPERSONA, $CARGO, $OBSERVACION, $ATENCIONES);
 
         if (!is_null($id)) {
             $this->response(array('response' => $id), 200);
@@ -69,12 +68,12 @@ class Pacientes extends REST_Controller
         }
     }
 
-    public function delete_get($IDPACIENTE)
+    public function delete_get($IDENFERMERA)
     {
-        if (!$IDPACIENTE) {
+        if (!$IDENFERMERA) {
             $this->response(null, 400);
         }
-        $delete = $this->pacientes_model->delete($IDPACIENTE);
+        $delete = $this->enfermeras_model->delete($IDENFERMERA);
         if (!is_null($delete)) {
             $this->response(array('response' => 'done'), 200);
         } else {
@@ -86,14 +85,13 @@ class Pacientes extends REST_Controller
     {
         $params = json_decode(file_get_contents('php://input'));
 
-        $IDPACIENTE = $params->IDPACIENTE;
-        $IDGENERO = $params->IDGENERO;
+        $IDENFERMERA = $params->IDENFERMERA;
         $IDPERSONA = $params->IDPERSONA;
-        $CONSULTAS_WEB = $params->CONSULTAS_WEB;
-        $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
-        $OBSERVACIONES = $params->OBSERVACIONES;
+        $CARGO = $params->CARGO;
+        $OBSERVACION = $params->OBSERVACION;
+        $ATENCIONES = $params->ATENCIONES;
 
-        $update = $this->pacientes_model->update($IDPACIENTE, $IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $update = $this->enfermeras_model->update($IDENFERMERA, $IDPERSONA, $CARGO, $OBSERVACION, $ATENCIONES);
 
         if (!is_null($update)) {
             $this->response(array('response' => 'data actualizado!'), 200);

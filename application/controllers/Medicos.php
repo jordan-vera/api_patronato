@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . '/libraries/REST_Controller.php';
 
-class Pacientes extends REST_Controller
+class Medicos extends REST_Controller
 {
     public function __construct($config = 'rest')
     {
@@ -17,12 +17,12 @@ class Pacientes extends REST_Controller
             die();
         }
 
-        $this->load->model('pacientes_model');
+        $this->load->model('medicos_model');
     }
 
     public function index_get()
     {
-        $datos = $this->pacientes_model->get();
+        $datos = $this->medicos_model->get();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -32,7 +32,7 @@ class Pacientes extends REST_Controller
 
     public function contador_get()
     {
-        $datos = $this->pacientes_model->contador();
+        $datos = $this->medicos_model->contador();
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -42,7 +42,7 @@ class Pacientes extends REST_Controller
 
     public function one_get($IDPACIENTE)
     {
-        $datos = $this->pacientes_model->getone($IDPACIENTE);
+        $datos = $this->medicos_model->getone($IDPACIENTE);
         if (!is_null($datos)) {
             $this->response(array('response' => $datos), 200);
         } else {
@@ -60,7 +60,7 @@ class Pacientes extends REST_Controller
         $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
         $OBSERVACIONES = $params->OBSERVACIONES;
 
-        $id = $this->pacientes_model->save($IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $id = $this->medicos_model->save($IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
 
         if (!is_null($id)) {
             $this->response(array('response' => $id), 200);
@@ -74,7 +74,7 @@ class Pacientes extends REST_Controller
         if (!$IDPACIENTE) {
             $this->response(null, 400);
         }
-        $delete = $this->pacientes_model->delete($IDPACIENTE);
+        $delete = $this->medicos_model->delete($IDPACIENTE);
         if (!is_null($delete)) {
             $this->response(array('response' => 'done'), 200);
         } else {
@@ -93,7 +93,7 @@ class Pacientes extends REST_Controller
         $FECHA_NACIMIENTO = $params->FECHA_NACIMIENTO;
         $OBSERVACIONES = $params->OBSERVACIONES;
 
-        $update = $this->pacientes_model->update($IDPACIENTE, $IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
+        $update = $this->medicos_model->update($IDPACIENTE, $IDGENERO, $IDPERSONA, $CONSULTAS_WEB, $FECHA_NACIMIENTO, $OBSERVACIONES);
 
         if (!is_null($update)) {
             $this->response(array('response' => 'data actualizado!'), 200);
